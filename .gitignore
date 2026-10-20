@@ -147,6 +147,7 @@ cookies.txt
 config.ini
 chaoxing.log
 config*.ini
+!config_template.ini
 .chaoxing.log
 ./config.ini
 ./chaoxing.log
