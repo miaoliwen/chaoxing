@@ -140,6 +140,11 @@ uv.lock
 # poetry
 poetry.lock
 
+# macOS DMG build outputs
+release_dmg/
+*.dmg
+.venv-mac/
+
 # Custom files
 .cookies.txt
 cookies.txt
