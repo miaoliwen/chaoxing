@@ -1,0 +1,11 @@
+# 统一在 macOS/Linux 下可直接执行的脚本与服务打包文件使用 LF
+* text=auto
+*.sh text eol=lf
+*.command text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.ini text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
