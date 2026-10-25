@@ -11,6 +11,7 @@ from typing import List, Dict, Tuple, Any, Optional
 
 from bs4 import BeautifulSoup, NavigableString
 
+from api import BS_PARSER
 from api.font_decoder import FontDecoder
 from api.logger import logger
 
@@ -26,7 +27,7 @@ def decode_course_list(html_text: str) -> List[Dict[str, str]]:
         课程信息列表，每个课程包含id、title、teacher等信息
     """
     logger.trace("开始解码课程列表...")
-    soup = BeautifulSoup(html_text, "lxml")
+    soup = BeautifulSoup(html_text, BS_PARSER)
     raw_courses = soup.select("div.course")
     course_list = []
 
@@ -62,7 +63,7 @@ def decode_course_folder(html_text: str) -> List[Dict[str, str]]:
         课程文件夹信息列表
     """
     logger.trace("开始解码二级课程列表...")
-    soup = BeautifulSoup(html_text, "lxml")
+    soup = BeautifulSoup(html_text, BS_PARSER)
     raw_courses = soup.select("ul.file-list>li")
     course_folder_list = []
 
@@ -90,7 +91,7 @@ def decode_course_point(html_text: str) -> Dict[str, Any]:
         章节信息字典，包含是否锁定状态和章节点列表
     """
     logger.trace("开始解码章节列表...")
-    soup = BeautifulSoup(html_text, "lxml")
+    soup = BeautifulSoup(html_text, BS_PARSER)
     course_point = {
         "hasLocked": False,  # 用于判断该课程任务是否是需要解锁
         "points": [],
@@ -389,7 +390,7 @@ def decode_questions_info(html_content: str) -> Dict[str, Any]:
     Returns:
         包含表单数据和问题列表的字典
     """
-    soup = BeautifulSoup(html_content, "lxml")
+    soup = BeautifulSoup(html_content, BS_PARSER)
     form_data = _extract_form_data(soup)
 
     # 检查是否存在字体加密

@@ -14,7 +14,10 @@ from typing import Optional
 
 import httpx
 import requests
-from openai import OpenAI
+try:
+    from openai import OpenAI
+except ImportError:  # 安卓(Chaquopy)等环境装不上 openai SDK 时，AI 题库不可用
+    OpenAI = None
 from urllib3 import disable_warnings, exceptions
 
 from api.answer_check import check_answer
@@ -1168,6 +1171,8 @@ class AI(Tiku):
         self.last_request_time = None
         self._lock = threading.Lock()
         self.work_feedback = None  # 章节检测错误反馈（重做时参考）
+        if OpenAI is None:
+            raise RuntimeError("openai 依赖未安装，AI 题库不可用（本环境不支持）")
 
     def set_work_feedback(self, feedback) -> None:
         """

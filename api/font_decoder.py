@@ -3,6 +3,7 @@ from typing import Dict, Optional
 
 from bs4 import BeautifulSoup
 
+from api import BS_PARSER
 import api.cxsecret_font as cxfont
 from api.exceptions import FontDecodeError
 from api.logger import logger
@@ -38,7 +39,7 @@ class FontDecoder:
         """
         try:
             try:
-                soup = BeautifulSoup(html_content, "lxml")
+                soup = BeautifulSoup(html_content, BS_PARSER)
             except (ImportError, LookupError, ValueError) as e:
                 logger.trace(f"lxml parser not available, falling back to html.parser: {e}")
                 soup = BeautifulSoup(html_content, "html.parser")
