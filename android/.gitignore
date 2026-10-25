@@ -1,0 +1,12 @@
+# 构建产物与本机配置
+.gradle/
+build/
+local.properties
+*.apk
+
+# 由 git archive 生成的核心包（构建前用 scripts/sync_core.sh 重新生成）
+app/src/main/python/core.zip
+
+# 截图与 UI 调试残留
+*.png
+ui*.xml
