@@ -19,6 +19,8 @@
 :star: 觉得有帮助的朋友可以给个Star
 
 ## :point_up: 更新通知
+**v1.0.0（图形界面版发布）**：新增 `gui.py` 图形界面（账号登录 / 课程多选 / 学习参数 / 题库配置 / 运行日志），打包体积从 255MB 瘦身到约 63MB，新增自研图标与**自动检查更新**（启动时静默检查 GitHub Release，也可点「检查更新」手动检查）。
+
 20241021更新通知： 感谢[sz134055](https://github.com/sz134055)提交代码[PR #360](https://github.com/Samueli924/chaoxing/pull/360)，**添加了对题库答题的支持**  
 
 ## :books: 使用方法
@@ -72,10 +74,18 @@ uv run --python 3.13 main.py -c config.ini
 ```
 
 ### 打包文件运行
-1. 从最新[Releases](https://github.com/Samueli924/chaoxing/releases)中下载exe文件
-2. (可选直接运行) 双击运行即可
+1. 从最新[Releases](https://github.com/miaoliwen/chaoxing/releases/latest)中下载文件：Windows 下载 `ChaoxingHelper_*.exe`（图形界面，双击即用），macOS 下载 `.dmg`
+2. (可选直接运行) 双击运行即可，GUI 内可一键获取课程列表、多选课程、开始任务
 3. (可选配置文件运行) 下载config_template.ini文件保存为config.ini文件，修改文件内的账号密码内容, 执行 `./chaoxing.exe -c config.ini`
 4. (可选命令行运行)`./chaoxing.exe -u "手机号" -p "密码" -l 课程ID1,课程ID2,课程ID3...(可选) -a [retry|ask|continue](可选)`
+
+> GUI 版会在启动时静默检查 GitHub 上的新版本，有更新时弹窗提示并可直接跳转下载页。
+
+### 图形界面（GUI）
+```bash
+python gui.py          # 源码运行
+pyinstaller ChaoxingHelper.spec --noconfirm   # 本地打包（如需压缩体积加 --upx-dir tools/upx/upx-5.2.1-win64）
+```
 
 ### macOS DMG 构建
 

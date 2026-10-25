@@ -504,7 +504,13 @@ def process_course(chaoxing: Chaoxing, course: dict[str, Any], config: dict):
 
 
 def filter_courses(all_course, course_list):
-    """过滤要学习的课程"""
+    """过滤要学习的课程
+
+    course_list 为 "all" 时表示学习全部课程（供图形界面使用，无需交互输入）。
+    """
+    if course_list and len(course_list) == 1 and course_list[0].lower() == "all":
+        return all_course
+
     if not course_list:
         # 手动输入要学习的课程ID列表
         print("*" * 10 + "课程列表" + "*" * 10)

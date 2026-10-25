@@ -4,8 +4,11 @@
 """
 
 import configparser
+import ipaddress
+import socket
 from abc import ABC, abstractmethod
 from typing import Dict, Optional
+from urllib.parse import urlparse
 
 import requests
 
@@ -31,11 +34,40 @@ class NotificationService(ABC):
     def config_set(self, config: Dict[str, str]) -> None:
         """
         设置通知服务的配置
-        
+
         Args:
             config: 包含配置参数的字典
         """
         self._conf = config
+
+    def _safe_post(self, url: str, *, json=None, params=None, data=None, headers=None):
+        """带 SSRF 防护的通知请求。
+
+        - 仅允许 http/https 协议；
+        - 目标主机解析出的所有 IP 必须是公网地址（阻断私网/环回/链路本地及云元数据地址）；
+        - 禁止重定向并强制超时。
+
+        校验失败抛 requests.exceptions.InvalidURL（RequestException 子类），
+        由各 send() 的现有 except 分支记录日志。
+        """
+        parsed = urlparse(str(url))
+        if parsed.scheme.lower() not in ("http", "https"):
+            raise requests.exceptions.InvalidURL(f"通知 URL 协议不受支持，已拒绝发送: {url!r}")
+        host = parsed.hostname
+        if not host:
+            raise requests.exceptions.InvalidURL(f"通知 URL 缺少主机名: {url!r}")
+        port = parsed.port or (443 if parsed.scheme.lower() == "https" else 80)
+        try:
+            infos = socket.getaddrinfo(host, port, proto=socket.IPPROTO_TCP)
+        except socket.gaierror as exc:
+            raise requests.exceptions.InvalidURL(f"通知 URL 主机解析失败: {host} ({exc})")
+        for info in infos:
+            if not ipaddress.ip_address(info[4][0]).is_global:
+                raise requests.exceptions.InvalidURL(
+                    f"通知目标 {host} 解析到内网/保留地址，已拒绝发送")
+        session = requests.Session()
+        return session.post(url, json=json, params=params, data=data,
+                            headers=headers, allow_redirects=False, timeout=10)
 
     def _load_config_from_file(self) -> Optional[Dict[str, str]]:
         """
@@ -195,7 +227,7 @@ class ServerChan(NotificationService):
         }
 
         try:
-            response = requests.post(self.url, json=params, headers=headers)
+            response = self._safe_post(self.url, json=params, headers=headers)
             response.raise_for_status()
             result = response.json()
             logger.info(f"Server酱通知发送成功: {result}")
@@ -231,7 +263,7 @@ class Qmsg(NotificationService):
         headers = {'Content-Type': 'application/json;charset=utf-8'}
 
         try:
-            response = requests.post(self.url, params=params, headers=headers)
+            response = self._safe_post(self.url, params=params, headers=headers)
             response.raise_for_status()
             result = response.json()
             logger.info(f"Qmsg酱通知发送成功: {result}")
@@ -266,7 +298,7 @@ class Bark(NotificationService):
         params = {'body': message}
 
         try:
-            response = requests.post(self.url, params=params)
+            response = self._safe_post(self.url, params=params)
             response.raise_for_status()
             result = response.json()
             logger.info(f"Bark通知发送成功: {result}")
@@ -305,7 +337,7 @@ class Telegram(NotificationService):
         }
 
         try:
-            response = requests.post(self.url, data=params)
+            response = self._safe_post(self.url, data=params)
             response.raise_for_status()
             result = response.json()
             if result.get('ok'):

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <!-- 超星学习通助手图标：深蓝渐变底 + 打开的书 + 播放徽章（自动刷课）+ 星（超星） -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b82f6"/>
+      <stop offset="1" stop-color="#1e3a8a"/>
+    </linearGradient>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#dbeafe"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 圆角底板 -->
+  <rect x="8" y="8" width="240" height="240" rx="56" fill="url(#bg)"/>
+
+  <!-- 星形点缀（超星） -->
+  <path d="M62 28 L68 46 L86 52 L68 58 L62 76 L56 58 L38 52 L56 46 Z" fill="#ffffff" opacity="0.95"/>
+  <path d="M96 64 L99 73 L108 76 L99 79 L96 88 L93 79 L84 76 L93 73 Z" fill="#bfdbfe" opacity="0.9"/>
+
+  <!-- 书投影 -->
+  <ellipse cx="128" cy="206" rx="62" ry="10" fill="#172554" opacity="0.35"/>
+
+  <!-- 打开的书 -->
+  <path d="M128 118 C106 100 74 94 50 100 L50 182 C74 176 106 182 128 198 Z" fill="url(#page)"/>
+  <path d="M128 118 C150 100 182 94 206 100 L206 182 C182 176 150 182 128 198 Z" fill="url(#page)"/>
+
+  <!-- 页面文字线 -->
+  <path d="M64 118 C84 112 108 116 120 127" stroke="#93c5fd" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M192 118 C172 112 148 116 136 127" stroke="#93c5fd" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M64 140 C84 134 108 138 120 149" stroke="#bfdbfe" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M192 140 C172 134 148 138 136 149" stroke="#bfdbfe" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <!-- 播放徽章（自动学习） -->
+  <circle cx="178" cy="88" r="36" fill="#ffffff"/>
+  <path d="M170 71 L196 88 L170 105 Z" fill="#1d4ed8"/>
+</svg>

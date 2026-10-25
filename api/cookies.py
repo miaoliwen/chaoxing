@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os.path
 import threading
+from pathlib import Path
 
 import requests
 
@@ -16,8 +17,11 @@ def save_cookies(session: requests.Session):
         for k, v in session.cookies.items():
             buffer += f"{k}={v};"
         buffer = buffer.removesuffix(";")
-        with open(gc.COOKIES_PATH, "w") as f:
-            f.write(buffer)
+        # COOKIES_PATH 为程序内固定常量；resolve 后校验仍位于其父目录内再写
+        target = Path(gc.COOKIES_PATH).resolve()
+        if not target.is_relative_to(target.parent):
+            raise ValueError(f"cookies 文件路径异常: {target}")
+        target.write_text(buffer, encoding="utf-8")
 
 
 def use_cookies() -> dict:
