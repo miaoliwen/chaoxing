@@ -34,5 +34,9 @@ def tqdm_sink(msg):
 
 
 logger.remove()
-logger.add(tqdm_sink, colorize=True, enqueue=True)
+try:
+    logger.add(tqdm_sink, colorize=True, enqueue=True)
+except OSError:
+    # 安卓等平台无 POSIX 信号量（sem_open），loguru 的 enqueue 队列不可用，退回同线程写
+    logger.add(tqdm_sink, colorize=True, enqueue=False)
 logger.add("chaoxing.log", rotation="10 MB", level="TRACE")
